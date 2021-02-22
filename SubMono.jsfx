@@ -1,0 +1,54 @@
+// (C) 2020, Tevio
+
+// NO WARRANTY IS GRANTED. THIS PLUG-IN IS PROVIDED ON AN "AS IS" BASIS, WITHOUT
+// WARRANTY OF ANY KIND. NO LIABILITY IS GRANTED, INCLUDING, BUT NOT LIMITED TO,
+// ANY DIRECT OR INDIRECT,  SPECIAL,  INCIDENTAL OR CONSEQUENTIAL DAMAGE ARISING
+// OUT OF  THE  USE  OR INABILITY  TO  USE  THIS PLUG-IN,  COMPUTER FAILTURE  OF
+// MALFUNCTION INCLUDED.  THE USE OF THE SOURCE CODE,  EITHER  PARTIALLY  OR  IN
+// TOTAL, IS ONLY GRANTED,  IF USED IN THE SENSE OF THE AUTHOR'S INTENTION,  AND
+// USED WITH ACKNOWLEDGEMENT OF THE AUTHOR. FURTHERMORE IS THIS PLUG-IN A  THIRD
+// PARTY CONTRIBUTION,  EVEN IF INCLUDED IN REAPER(TM),  COCKOS INCORPORATED  OR
+// ITS AFFILIATES HAVE NOTHING TO DO WITH IT.  LAST BUT NOT LEAST, BY USING THIS
+// PLUG-IN YOU RELINQUISH YOUR CLAIM TO SUE IT'S AUTHOR, AS WELL AS THE CLAIM TO
+// ENTRUST SOMEBODY ELSE WITH DOING SO.
+
+desc:SubMono
+desc:SubMono Tevio
+//tags: Sub monoizer
+//author: Tevio
+
+slider1:100<0,22000,1>Crossover (Hz)
+slider2:1.5<2,0.5,0.1>Gain Sub
+
+in_pin:left input
+in_pin:right input
+out_pin:output left
+out_pin:output right
+
+
+@init
+cDenorm=10^-30;
+
+@slider
+
+freqLP = min(min(slider1,srate),22000);
+xLP = exp(-2.0*$pi*freqLP/srate);
+a0LP = 1.0-xLP;
+b1LP = -xLP;
+
+@sample
+
+s0 = spl0;
+s1 = spl1;
+
+spl0local = (tmplLP = a0LP*s0 - b1LP*tmplLP + cDenorm);
+spl1local = (tmprLP = a0LP*s1 - b1LP*tmprLP + cDenorm);
+
+spl2local = s0 - spl0local;
+spl3local = s1 - spl1local;
+
+spl1local = spl0local = (spl0local+spl1local)/slider2;
+
+spl0 = spl0local+spl2local;
+spl1 = spl1local+spl3local;
+
