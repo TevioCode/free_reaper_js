@@ -8,5 +8,12 @@
 
 | Name JSFX |         description            |
 | ------------- | ------------------------------ |
-| **1. Submono**      | Monoizer from crossover frequency |
-| **2. Submono Pan**   | Monoizer from crossover frequency with integrated pan |
+| **1. Submono**      | Monoizer from crossover low-frequency |
+| **2. Submono Pan**   | Monoizer from crossover low-frequency with integrated pan |
+
+
+### Installation
+Download plugins.jsfx and drop in your Reaper resource path directory.
+Rescan and enjoy!
+
+<img src="images/reaper%20resource%20path.png" width="50%" height="50%">
